@@ -11,6 +11,8 @@
 package cluster
 
 import (
+	"log"
+	"os"
 	"sync"
 	"time"
 
@@ -80,6 +82,8 @@ func (module *KafkaCluster) Configure(name string, configRoot string) {
 // to the caller. Once the client is set up, tickers are started to periodically refresh topics and offsets.
 func (module *KafkaCluster) Start() error {
 	module.Log.Info("starting")
+
+	sarama.Logger = log.New(os.Stderr, "[Sarama] ", log.LstdFlags)
 
 	// Connect Kafka client
 	client, err := sarama.NewClient(module.servers, module.saramaConfig)
