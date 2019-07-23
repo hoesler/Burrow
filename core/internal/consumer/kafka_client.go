@@ -14,8 +14,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"log"
-	"os"
 	"sync"
 
 	"github.com/Shopify/sarama"
@@ -135,7 +133,7 @@ func (module *KafkaClient) Configure(name string, configRoot string) {
 func (module *KafkaClient) Start() error {
 	module.Log.Info("starting")
 
-	sarama.Logger = log.New(os.Stderr, "[Sarama] ", log.LstdFlags)
+	helpers.InitSaramaLogging()
 
 	// Connect Kafka client
 	client, err := sarama.NewClient(module.servers, module.saramaConfig)

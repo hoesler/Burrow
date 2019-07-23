@@ -13,6 +13,7 @@ package helpers
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"go.uber.org/zap"
 	"io/ioutil"
 
 	"github.com/Shopify/sarama"
@@ -520,4 +521,9 @@ func (m *MockSaramaPartitionConsumer) Errors() <-chan *sarama.ConsumerError {
 func (m *MockSaramaPartitionConsumer) HighWaterMarkOffset() int64 {
 	args := m.Called()
 	return args.Get(0).(int64)
+}
+
+func InitSaramaLogging() {
+	logger, _ := zap.NewProduction()
+	sarama.Logger = zap.NewStdLog(logger.With(zap.String("library", "sarama")))
 }
