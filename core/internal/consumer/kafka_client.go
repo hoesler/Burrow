@@ -14,6 +14,8 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
+	"log"
+	"os"
 	"sync"
 
 	"github.com/Shopify/sarama"
@@ -139,6 +141,8 @@ func (module *KafkaClient) Start() error {
 		module.Log.Error("failed to start client", zap.Error(err))
 		return err
 	}
+
+	sarama.Logger = log.New(os.Stderr, "[Sarama] ", log.LstdFlags)
 
 	// Start the consumers
 	err = module.startKafkaConsumer(&helpers.BurrowSaramaClient{Client: client})
