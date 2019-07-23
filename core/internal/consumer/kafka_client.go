@@ -133,7 +133,7 @@ func (module *KafkaClient) Configure(name string, configRoot string) {
 func (module *KafkaClient) Start() error {
 	module.Log.Info("starting")
 
-	helpers.InitSaramaLogging()
+	helpers.InitSaramaLogging(module.App.Logger)
 
 	// Connect Kafka client
 	client, err := sarama.NewClient(module.servers, module.saramaConfig)

@@ -524,16 +524,11 @@ func (m *MockSaramaPartitionConsumer) HighWaterMarkOffset() int64 {
 	return args.Get(0).(int64)
 }
 
-func newSaramaZapLogger() sarama.StdLogger {
-	zl, _ := zap.NewProduction()
-	sl, _ := zap.NewStdLogAt(zl.With(zap.String("library", "sarama")), zapcore.DebugLevel)
+func newSaramaZapLogger(logger *zap.Logger) sarama.StdLogger {
+	sl, _ := zap.NewStdLogAt(logger.With(zap.String("library", "sarama")), zapcore.DebugLevel)
 	return sl
 }
 
-var SaramaZapLogger = newSaramaZapLogger()
-
-func InitSaramaLogging() {
-	if sarama.Logger != SaramaZapLogger {
-		sarama.Logger = SaramaZapLogger
-	}
+func InitSaramaLogging(logger *zap.Logger) {
+	sarama.Logger = newSaramaZapLogger(logger)
 }
