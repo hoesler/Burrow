@@ -135,14 +135,14 @@ func (module *KafkaClient) Configure(name string, configRoot string) {
 func (module *KafkaClient) Start() error {
 	module.Log.Info("starting")
 
+	sarama.Logger = log.New(os.Stderr, "[Sarama] ", log.LstdFlags)
+
 	// Connect Kafka client
 	client, err := sarama.NewClient(module.servers, module.saramaConfig)
 	if err != nil {
 		module.Log.Error("failed to start client", zap.Error(err))
 		return err
 	}
-
-	sarama.Logger = log.New(os.Stderr, "[Sarama] ", log.LstdFlags)
 
 	// Start the consumers
 	err = module.startKafkaConsumer(&helpers.BurrowSaramaClient{Client: client})
